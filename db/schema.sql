@@ -1,24 +1,20 @@
--- Drops the inventory_db if it exists currently --
-DROP DATABASE IF EXISTS inventory_db;
--- Creates the inventory_db database --
-CREATE DATABASE inventory_db;
+DROP DATABASE IF EXISTS grocery_db;
+CREATE DATABASE grocery_db;
 
--- use inventory_db database --
-USE inventory_db;
+USE grocery_db;
 
--- Creates the table "produce" within inventory_db --
-CREATE TABLE produce (
-  -- Creates a numeric column called "id" --
+CREATE TABLE customers (
   id INT NOT NULL,
-  -- Makes a string column called "name" which cannot contain null --
-  name VARCHAR(30) NOT NULL
+  first_name VARCHAR(30),
+  last_name VARCHAR(30),
+  PRIMARY KEY (id)
 );
 
--- Insert multiple produce items --
-INSERT INTO produce (id, name)
-VALUES
-    ( 1, "apple"),
-    ( 2, "orange"),
-    ( 3, "banana");
-    
-    
+CREATE TABLE customer_order (
+  id INT,
+  customer_id INT,
+  order_details TEXT,
+  FOREIGN KEY (customer_id)
+  REFERENCES customers(id)
+  ON DELETE SET NULL
+);
