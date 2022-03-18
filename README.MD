@@ -40,7 +40,7 @@ Mockup<br>
 
 ## <a id='questions' href='#readme-badges'><img id='usage' src='https://imgur.com/Z3i069z.png' style='height: 40px'></a>
 If you have questions, you can either open a issue in my Github repository <br>
-GitHub: <https://github.com/ila0406@gmail.com> <br>
+GitHub: <https://github.com/ila0406> <br>
 <br>
 Or you can send me an email directly <br>
 Email: <ila0406@gmail.com>
