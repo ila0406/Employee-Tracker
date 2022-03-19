@@ -16,13 +16,11 @@ const mysql = require('mysql2');
 const db = mysql.createConnection(
   {
     host: 'localhost',
-    // MySQL username,
     user: 'root',
-    // MySQL password
     password: '',
     database: 'employee_db'
   },
-  console.log(`Connected to the classlist_db database.`)
+  console.log(`Connected to the employee_db database.`)
 );
 
 // // Query database
@@ -39,7 +37,20 @@ const db = mysql.createConnection(
 //   console.log(`Server running on port ${PORT}`);
 // });
 
-
+// Commands
+'01) View All Employees',
+'02) Add Employee',
+'03) Remove Employee',
+'04) Update Employee Role',
+'05) Update Employee Manager',
+'06) Update Employee Department',
+'07) View All Roles',
+'08) Add Role',
+'09) View all Departments',
+'10) Add Department',
+'11) View All Employees By Department',
+'12) View All Employees by Manager',
+'13) Quit'
 
 // 3) questions from inquirer
 const questions = () => {
@@ -48,7 +59,7 @@ const questions = () => {
             type: 'list',
             name: 'command',
             message: 'What would you like to do?',
-            choices: ['View All Employees','Add Employee','Remove Employee','Update Employee Role','Update Employee Manager','Update Employee Manager','View All Roles','Add Role','View all Departments','Add Department','View All Employees By Department','View All Employees by Manager','Quit']
+            choices: ['View All Employees','Add Employee','Remove Employee','Update Employee Role','Update Employee Manager','Update Employee Department','View All Roles','Add Role','View all Departments','Add Department','View All Employees By Department','View All Employees by Manager','Quit']
         },
         {
             type: 'input',
@@ -136,30 +147,11 @@ const questions = () => {
 };
 
 // 4) function to navigate options
-
 // 5) Employees
 // 6) Departments
 // 7) Managers
 // 8) Roles
 
-// variables needed for this application
-// const {generateHTML, generateManagerCard, generateInternCard, generateEngrCard} = require('./lib/generateHTML');
-// const Engineer = require("./lib/engineer.js");
-// const Intern = require("./lib/intern.js");
-// const Manager = require("./lib/manager.js");
-const teamMembers = [];
-
-// packages needed for this application
-// const inquirer = require('inquirer');
-const fs = require('fs');
-
-
-// Function to write HTML file
-// function writeToFile(fileName, data) {
-//     fs.writeFile(fileName, generateHTML(data.join('')), function(err) { 
-//         console.log(err)
-//     })
-// }
 
 // Function to initialize app
 function init() {
