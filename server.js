@@ -5,13 +5,7 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
 require('console.table');
-
-// const PORT = process.env.PORT || 3002;
-// const app = express();
-
-// // Express middleware
-// app.use(express.urlencoded({ extended: false }));
-// app.use(express.json());
+// const { query1name, query2name, query3name }= require('./queries');
 
 // 2) Connect to database
 const db = mysql.createConnection(
@@ -39,30 +33,47 @@ const db = mysql.createConnection(
 // });
 
 // Commands
-'01) View All Employees',
-'02) Add Employee',
-'03) Remove Employee',
-'04) Update Employee Role',
-'05) Update Employee Manager',
-'06) Update Employee Department',
-'07) View All Roles',
-'08) Add Role',
-'09) View all Departments',
-'10) Add Department',
-'11) View All Employees By Department',
-'12) View All Employees by Manager',
-'13) Quit'
+// '01) View All Employees',
+// '02) Add Employee',
+// '03) Remove Employee',
+// '04) Update Employee Role',
+// '05) Update Employee Manager',
+// '06) Update Employee Department',
+// '07) View All Roles',
+// '08) Add Role',
+// '09) View all Departments',
+// '10) Add Department',
+// '11) View All Employees By Department',
+// '12) View All Employees by Manager',
+// '13) Quit'
 
 // 3) questions from inquirer
+const mainMenu = {
+    type: 'list',
+        name: 'menuCommand',
+        message: 'What would you like to do?',
+        choices: [
+            'View All Employees',
+            'Add Employee',
+            'Remove Employee',
+            'Update Employee Role',
+            'Update Employee Manager',
+            'Update Employee Department',
+            'View All Roles',
+            'Add Role',
+            'View all Departments',
+            'Add Department',
+            'View All Employees By Department',
+            'View All Employees by Manager',
+            'Quit'
+        ]
+};
+
+
+
 const questions = () => {
     return inquirer.prompt([
-        {
-            type: 'list',
-            name: 'command',
-            message: 'What would you like to do?',
-            choices: ['View All Employees','Add Employee','Remove Employee','Update Employee Role','Update Employee Manager','Update Employee Department','View All Roles','Add Role','View all Departments','Add Department','View All Employees By Department','View All Employees by Manager','Quit']
-        },
-        {
+                {
             type: 'input',
             message: "Which employee's role do you want to update?",
             name: 'name'
@@ -74,47 +85,23 @@ const questions = () => {
         },
         {
             type: 'input',
-            message: "Who is the name of the department",
+            message: "What is the name of the department",
             name: 'nameDepartment'
         },
         {
             type: 'input',
-            message: "Who is the name of the role",
+            message: "What is the name of the role",
             name: 'nameRole'
         },
         {
             type: 'input',
-            message: "Who is the first name of the employee",
+            message: "What is the first name of the employee",
             name: 'nameFirst'
         },
         {
             type: 'input',
-            message: "Who is the last name of the employee",
+            message: "What is the last name of the employee",
             name: 'nameLast'
-        },
-        {
-            type: 'input',
-            message: 'Enter office number:',
-            name: 'officeNumber',
-            when: (input) => input.role === "Manager",
-        },
-        {
-            type: 'input',
-            name: 'github',
-            message: "Enter engineer's github name:",
-            when: (input) => input.role === "Engineer",
-        },
-        {
-            type: 'input',
-            name: 'school',
-            message: "Enter the intern's school:",
-            when: (input) => input.role === "Intern",
-        },
-        {
-            type: 'confirm',
-            name: 'moreEmployees',
-            message: 'Would you like to add more employees to your team?',
-            default: false
         }
     ])
     .then (employeeResponse => {
@@ -148,21 +135,66 @@ const questions = () => {
 };
 
 // 4) function to navigate options
+// Function to initialize app
+function init ()  {
+//     questions()
+//         .then(answers => {
+//             console.log(answers)
+//             //  writeToFile('./dist/index.html',answers);
+//         }
+//     );
+    console.log('Running program :)')
+    let answer = inquirer.prompt(mainMenu);
+
+    switch (answer.menuCommand) {
+        case 'View All Employees':
+            console.log('Option1');
+            break;
+        case 'Add Employee':
+            console.log('Option2');
+            break;
+        case 'Remove Employee':
+            console.log('Option3');
+            break;
+        case 'Update Employee Role':
+            console.log('Option4');
+            break;
+        case 'Update Employee Manager':
+            console.log('Option5');
+            break;
+        case 'Update Employee Department':
+            console.log('Option6');
+            break;
+        case 'View All Roles':
+            console.log('Option7');
+            break;
+        case 'Add Role':
+            console.log('Option8');
+            break;
+        case 'View all Departments':
+            console.log('Option9');
+            break;
+        case 'Add Department':
+            console.log('Option10');
+            break;
+        case 'View All Employees By Department':
+            console.log('Option11');
+            break;
+        case 'View All Employees by Manager':
+            console.log('Option12');
+            break;
+        case 'Quit':
+            console.log('Option13');
+            break;
+        default:
+            break;
+    }
+}
+
 // 5) Employees
 // 6) Departments
 // 7) Managers
 // 8) Roles
-
-
-// Function to initialize app
-function init() {
-    questions()
-        .then(answers => {
-            console.log(answers)
-            //  writeToFile('./dist/index.html',answers);
-        }
-    );
-}
 
 // Function call to initialize app
 init();
