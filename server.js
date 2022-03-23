@@ -4,6 +4,7 @@
 // 1) Require
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
+require('console.table');
 
 // const PORT = process.env.PORT || 3002;
 // const app = express();
