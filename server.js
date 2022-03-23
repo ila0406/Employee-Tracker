@@ -189,7 +189,9 @@ function init ()  {
         default:
             break;
     }
-}
+
+    init();
+};
 
 // 5) Employees
 // 6) Departments
