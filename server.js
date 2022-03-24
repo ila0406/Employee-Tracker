@@ -40,52 +40,48 @@ const mainMenu = {
     ]
 };
 
-// 4) function to navigate options
-// Function to initialize app
+// Function to initialize app and navigate to options
 async function init ()  {
-    // console.log('Running program :)')
     let answer = await inquirer.prompt(mainMenu);
 
     switch (answer.menuCommand) {
         case '01) View All Employees':
-            // console.log('Option1');
             await allEmployees();
             break;
         case '02) Add Employee':
-            console.log('Option2');
+            await allEmployees();
             break;
         case '03) Remove Employee':
-            console.log('Option3');
+            await allEmployees();
             break;
         case '04) Update Employee Role':
-            console.log('Option4');
+            await allEmployees();
             break;
         case '05) Update Employee Manager':
-            console.log('Option5');
+            await allEmployees();
             break;
         case '06) Update Employee Department':
-            console.log('Option6');
+            await allEmployees();
             break;
         case '07) View All Roles':
-            console.log('Option7');
+            await allRoles();
             break;
         case '08) Add Role':
             console.log('Option8');
             break;
         case '09) View all Departments':
-            console.log('Option9');
+            await allDepartments();
             break;
         case '10) Add Department':
-            console.log('Option10');
+            await allEmployees();
             break;
         case '11) View All Employees By Department':
-            console.log('Option11');
+            await allEmployees();
             break;
         case '12) View All Employees by Manager':
-            console.log('Option12');
+            await allEmployees();
             break;
         case 'Quit':
-            console.log('Option13');
             process.exit();
         default:
             break;
@@ -94,19 +90,146 @@ async function init ()  {
     await init();
 };
 
-// 5) Employees
+// Menu option 01) View All Employees
 function allEmployees() {
     const query = `SELECT id, first_name, last_name, manager_id, role_id, department_id FROM employee WHERE deleted_time is NULL;`;
     db.query(query, (err, res) => {
         if (err) throw err;
+        console.log('\n');
         console.log('VIEW ALL EMPLOYEES');
         console.table(res);
         init();
     });
 };
-// 6) Departments
-// 7) Managers
-// 8) Roles
+
+// // Menu option 02) Add Employee
+// function xxxxxx() {
+//     const query = ``;
+//     db.query(query, (err, res) => {
+//         if (err) throw err;
+//         console.log('\n');
+//         console.log('');
+//         console.table(res);
+//         init();
+//     });
+// };
+// // Menu option 03) Remove Employee
+// function xxxxxx() {
+//     const query = ``;
+//     db.query(query, (err, res) => {
+//         if (err) throw err;
+//         console.log('\n');
+//         console.log('');
+//         console.table(res);
+//         init();
+//     });
+// };
+// // Menu option 04) Update Employee Role
+// function xxxxxx() {
+//     const query = ``;
+//     db.query(query, (err, res) => {
+//         if (err) throw err;
+//         console.log('\n');
+//         console.log('');
+//         console.table(res);
+//         init();
+//     });
+// };
+// // Menu option 05) Update Employee Manager
+// function xxxxxx() {
+//     const query = ``;
+//     db.query(query, (err, res) => {
+//         if (err) throw err;
+//         console.log('\n');
+//         console.log('');
+//         console.table(res);
+//         init();
+//     });
+// };
+// // Menu option 06) Update Employee Department
+// function xxxxxx() {
+//     const query = ``;
+//     db.query(query, (err, res) => {
+//         if (err) throw err;
+//         console.log('\n');
+//         console.log('');
+//         console.table(res);
+//         init();
+//     });
+// };
+
+// Menu option 07) View All Roles
+function allRoles() {
+    const query = `SELECT r.id, r.title, r.salary, d.name FROM role r, department d WHERE d.id = r.department_id and d.deleted_time is NULL;`;
+    db.query(query, (err, res) => {
+        if (err) throw err;
+        console.log('\n');
+        console.log('VIEW ALL DEPARTMENTS');
+        console.table(res);
+        init();
+    });
+};
+
+// // Menu option 08) Add Role
+// function xxxxxx() {
+//     const query = ``;
+//     db.query(query, (err, res) => {
+//         if (err) throw err;
+//         console.log('\n');
+//         console.log('');
+//         console.table(res);
+//         init();
+//     });
+// };
+
+// Menu option 09) View all Departments
+function allDepartments() {
+    const query = `SELECT id, name FROM department WHERE deleted_time is NULL;`;
+    db.query(query, (err, res) => {
+        if (err) throw err;
+        console.log('\n');
+        console.log('VIEW ALL DEPARTMENTS');
+        console.table(res);
+        init();
+    });
+};
+
+// // Menu option 10) Add Department
+// function xxxxxx() {
+//     const query = ``;
+//     db.query(query, (err, res) => {
+//         if (err) throw err;
+//         console.log('\n');
+//         console.log('');
+//         console.table(res);
+//         init();
+//     });
+// };
+
+// // Menu option 11) View All Employees By Department
+// function xxxxxx() {
+//     const query = ``;
+//     db.query(query, (err, res) => {
+//         if (err) throw err;
+//         console.log('\n');
+//         console.log('');
+//         console.table(res);
+//         init();
+//     });
+// };
+
+// // Menu option 12) View All Employees by Manager
+// function xxxxxx() {
+//     const query = ``;
+//     db.query(query, (err, res) => {
+//         if (err) throw err;
+//         console.log('\n');
+//         console.log('');
+//         console.table(res);
+//         init();
+//     });
+// };
+
 
 // Function call to initialize app
 init();
