@@ -44,3 +44,20 @@ GitHub: <https://github.com/ila0406> <br>
 <br>
 Or you can send me an email directly <br>
 Email: <ila0406@gmail.com>
+
+
+
+## Main Menu Commands
+01) View All Employees',
+02) Add Employee',
+03) Remove Employee',
+04) Update Employee Role',
+05) Update Employee Manager',
+06) Update Employee Department',
+07) View All Roles',
+08) Add Role',
+09) View all Departments',
+10) Add Department',
+11) View All Employees By Department',
+12) View All Employees by Manager',
+13) Quit'
