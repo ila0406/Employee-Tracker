@@ -1,13 +1,8 @@
-// const express = require('express');
-// Import and require mysql2
-
-// 1) Require
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
 require('console.table');
-// const { query1name, query2name, query3name }= require('./queries');
+const sequelize = require('./config/connection');
 
-// 2) Connect to database
 const db = mysql.createConnection(
   {
     host: 'localhost',
@@ -18,7 +13,7 @@ const db = mysql.createConnection(
   console.log(`Connected to the employee_db database.`)
 );
 
-// 3) questions from inquirer
+// Command options for Main Menu
 const mainMenu = {
     type: 'list',
     name: 'menuCommand',
@@ -32,10 +27,12 @@ const mainMenu = {
         '06) Update Employee Department',
         '07) View All Roles',
         '08) Add Role',
-        '09) View all Departments',
-        '10) Add Department',
-        '11) View All Employees By Department',
-        '12) View All Employees by Manager',
+        '09) Remove Role',
+        '10) View all Departments',
+        '11) Add Department',
+        '12) Remove Department',
+        '13) View All Employees By Department',
+        '14) View All Employees by Manager',
         'Quit'
     ]
 };
@@ -69,16 +66,22 @@ async function init ()  {
         case '08) Add Role':
             await addRole();
             break;
-        case '09) View all Departments':
+        case '09) Add Role':
+            await removeRole();
+            break;
+        case '10) View all Departments':
             await allDepartments();
             break;
-        case '10) Add Department':
+        case '11) Add Department':
             await addDepartment();
             break;
-        case '11) View All Employees By Department':
+        case '12) Remove Department':
+            await removeDepartment();
+            break;
+        case '13) View All Employees By Department':
             await allEmployeesByDept();
             break;
-        case '12) View All Employees by Manager':
+        case '14) View All Employees by Manager':
             await allEmployeesByManager();
             break;
         case 'Quit':
@@ -86,7 +89,6 @@ async function init ()  {
         default:
             break;
     }
-
     // await init();
 };
 
@@ -97,6 +99,7 @@ function allEmployees() {
         if (err) throw err;
         console.log('\n');
         console.log('VIEW ALL EMPLOYEES');
+        console.log('\n');
         console.table(res);
         init();
     });
@@ -104,11 +107,13 @@ function allEmployees() {
 
 // Menu option 02) Add Employee
 async function addEmployee() {
-    
+    console.log('\n');
     console.log('ADDING EMPLOYEE');
-
+    console.log('\n');
+    // prompt user for first and last name
     const addname = await inquirer.prompt(namePrompt());
 
+    // Provide output from role table for the user to select a role for new employee 
     db.query('SELECT * FROM role ORDER BY role.id;', async (err, res) => {
         if (err) throw err;
         const { role } = await inquirer.prompt([
@@ -120,6 +125,7 @@ async function addEmployee() {
             }
         ]);
 
+        // Set new employee's role based on response from user
         let roleId;
         for (const row of res) {
             if (row.title === role) {
@@ -127,6 +133,7 @@ async function addEmployee() {
                 continue;
             }
         }
+        // Provide output from employee table for the user to select a manager for new employee
         db.query('SELECT * FROM employee', async (err, res) => {
             if (err) throw err;
             let choices = res.map(res => `${res.first_name} ${res.last_name}`);
@@ -139,6 +146,8 @@ async function addEmployee() {
                     message: 'Choose the employee Manager: '
                 }
             ]);
+
+            // Set new employee's manager based on response from user
             let managersID;
             let managerName;
             if (manager === 'none') {
@@ -149,13 +158,12 @@ async function addEmployee() {
                     if (data.fullName === manager) {
                         managersID = data.id;
                         managerName = data.fullName;
-                        console.log(managersID);
-                        console.log(managerName);
                         continue;
                     }
                 }
             }
-            
+
+            // Insert all input for new employee into employee table
             db.query(
                 'INSERT INTO employee SET ?',
                 {
@@ -166,6 +174,9 @@ async function addEmployee() {
                 },
                 (err, res) => {
                     if (err) throw err;
+                    console.log('\n');
+                    console.log('EMPLOYEE ADDED');
+                    console.log('\n');
                     init();
                 }
             );
@@ -173,6 +184,7 @@ async function addEmployee() {
     });
 };
 
+// Prompt for Employee full name
 function namePrompt() {
     return ([
         {
@@ -188,10 +200,13 @@ function namePrompt() {
     ]);
 }
 
-// // Menu option 03) Remove Employee
+// Menu option 03) Remove Employee
 async function removeEmployee() {
+    console.log('\n');
     console.log('REMOVING EMPLOYEE');
+    console.log('\n');
 
+    // Provide output from employee table for the user to select a employee to remove
     db.query('SELECT * FROM employee WHERE deleted_time is NULL;', async (err, res) => {
         if (err) throw err;
         let choices = res.map(res => `${res.id} ${res.first_name} ${res.last_name}`);
@@ -210,56 +225,135 @@ async function removeEmployee() {
                 employeeId = row.id;
                 continue;
         }
-
-        console.log(employeeId);
         
         const query = `UPDATE employee SET deleted_time = CURRENT_TIMESTAMP WHERE id =${employeeId}`;
-        console.log(query);
 
+        // Remove selected employee
         db.query(query, (err, res) => {
             if (err) throw err;
             console.log('\n');
-            console.log('DELETE THE EMPLOYEES');
+            console.log('EMPLOYEE REMOVED');
+            console.log('\n');
             init();
         });
     });
-};
-    
+}; 
 
 // Menu option 04) Update Employee Role
-function updateEmployeeRole() {
-//     const query = ``;
-//     db.query(query, (err, res) => {
-//         if (err) throw err;
-        console.log('\n');
-        console.log('Updating a employees Role will be in v2');
-//         console.table(res);
-//         init();
-//     });
+async function updateEmployeeRole() {
+    console.log('\n');
+    console.log('UPDATE EMPLOYEE ROLE');
+    console.log('\n');
+
+    // Provide output from employee table for the user to select a employee to remove
+    db.query('SELECT * FROM employee WHERE deleted_time is NULL;', async (err, res) => {
+        if (err) throw err;
+        let choices = res.map(res => `${res.id} ${res.first_name} ${res.last_name}`);
+        choices.push('none');
+        let { employee } = await inquirer.prompt([
+            {
+                name: 'employee',
+                type: 'list',
+                choices: choices,
+                message: 'Choose the employee: '
+            }
+        ]);
+        
+        // let employeeId;
+        // for (const row of res) {
+        //         employeeId = row.id;
+        //         continue;
+        // }
+        
+        // const query = `UPDATE employee SET deleted_time = CURRENT_TIMESTAMP WHERE id =${employeeId}`;
+
+        // Remove selected employee
+        // db.query(query, (err, res) => {
+        //     if (err) throw err;
+            console.log('\n');
+            console.log('EMPLOYEE ROLE UPDATED');
+            console.log('\n');
+            init();
+        // });
+    });
 };
 
 // Menu option 05) Update Employee Manager
-function updateEmployeeManager() {
-//     const query = ``;
-//     db.query(query, (err, res) => {
-//         if (err) throw err;
-        console.log('\n');
-        console.log('Updating a employees Manager will be in v2');
-//         console.table(res);
-//         init();
-//     });
+async function updateEmployeeManager() {
+    console.log('\n');
+    console.log('UPDATE EMPLOYEE MANAGER');
+    console.log('\n');
+
+    // Provide output from employee table for the user to select a employee to remove
+    db.query('SELECT * FROM employee WHERE deleted_time is NULL;', async (err, res) => {
+        if (err) throw err;
+        let choices = res.map(res => `${res.id} ${res.first_name} ${res.last_name}`);
+        choices.push('none');
+        let { employee } = await inquirer.prompt([
+            {
+                name: 'employee',
+                type: 'list',
+                choices: choices,
+                message: 'Choose the employee: '
+            }
+        ]);
+        
+        // let employeeId;
+        // for (const row of res) {
+        //         employeeId = row.id;
+        //         continue;
+        // }
+        
+        // const query = `UPDATE employee SET deleted_time = CURRENT_TIMESTAMP WHERE id =${employeeId}`;
+
+        // Remove selected employee
+        // db.query(query, (err, res) => {
+        //     if (err) throw err;
+            console.log('\n');
+            console.log('EMPLOYEE MANAGER UPDATED');
+            console.log('\n');
+            init();
+        // });
+    });
 };
 
 // Menu option 06) Update Employee Department
-function updateEmployeeDept() {
-//     const query = ``;
-//     db.query(query, (err, res) => {
-//         if (err) throw err;
-        console.log('\n');
-        console.log('Updating a employees Department will be in v2');
-//         console.table(res);
-//         init();
-//     });
+async function updateEmployeeDept() {
+    console.log('\n');
+    console.log('UPDATE EMPLOYEE DEPARTMENT');
+    console.log('\n');
+
+    // Provide output from employee table for the user to select a employee to remove
+    db.query('SELECT * FROM employee WHERE deleted_time is NULL;', async (err, res) => {
+        if (err) throw err;
+        let choices = res.map(res => `${res.id} ${res.first_name} ${res.last_name}`);
+        choices.push('none');
+        let { employee } = await inquirer.prompt([
+            {
+                name: 'employee',
+                type: 'list',
+                choices: choices,
+                message: 'Choose the employee: '
+            }
+        ]);
+        
+        // let employeeId;
+        // for (const row of res) {
+        //         employeeId = row.id;
+        //         continue;
+        // }
+        
+        // const query = `UPDATE employee SET deleted_time = CURRENT_TIMESTAMP WHERE id =${employeeId}`;
+
+        // Remove selected employee
+        // db.query(query, (err, res) => {
+        //     if (err) throw err;
+            console.log('\n');
+            console.log('EMPLOYEE DEPARTMENT UPDATED');
+            console.log('\n');
+            init();
+        // });
+    });
 };
 
 // Menu option 07) View All Roles
@@ -269,6 +363,7 @@ function allRoles() {
         if (err) throw err;
         console.log('\n');
         console.log('VIEW ALL ROLES');
+        console.log('\n');
         console.table(res);
         init();
     });
@@ -281,54 +376,137 @@ function addRole() {
 //         if (err) throw err;
         console.log('\n');
         console.log('Adding a Role will be in v2');
+        console.log('\n');
 //         console.table(res);
 //         init();
 //     });
 };
 
-// Menu option 09) View all Departments
+// Menu option 09) Remove Role
+function removeRole() {
+    //     const query = ``;
+    //     db.query(query, (err, res) => {
+    //         if (err) throw err;
+            console.log('\n');
+            console.log('Adding a Role will be in v2');
+    //         console.table(res);
+    //         init();
+    //     });
+    };
+
+// Menu option 10) View all Departments
 function allDepartments() {
     const query = `SELECT id, name FROM department WHERE deleted_time is NULL;`;
     db.query(query, (err, res) => {
         if (err) throw err;
         console.log('\n');
         console.log('VIEW ALL DEPARTMENTS');
+        console.log('\n');
         console.table(res);
         init();
     });
 };
 
-// Menu option 10) Add Department
-function addDepartment() {
-//     const query = ``;
-//     db.query(query, (err, res) => {
-//         if (err) throw err;
-        console.log('\n');
-        console.log('Adding a Department will be in v2');
-//         console.table(res);
-//         init();
-//     });
+// Menu option 11) Add Department
+async function addDepartment() {
+    console.log('\n');
+    console.log('ADDING DEPARTMENT');
+
+    // Prompt user for department name
+    const adddept = await inquirer.prompt(deptPrompt());
+    const deptName = adddept.name;
+        
+    const query = `INSERT INTO department (name) VALUES (${deptName})`;
+    console.log(query);
+
+    // Insert all input for new department into department table
+    db.query(
+        'INSERT INTO department SET ?',
+        {
+            name: deptName
+        },
+        (err, res) => {
+            if (err) throw err;
+            init();
+        }
+    );
+
+    console.log('\n');
+    console.log('DEPARTMENT ADDED');
+    console.log('\n');
 };
 
-// Menu option 11) View All Employees By Department
+// Function to prompt for department name
+function deptPrompt() {
+    return ([
+        {
+            name: "name",
+            type: "input",
+            message: "Enter the department name: "
+        }
+    ]);
+}
+
+// Menu option 12) Remove Department
+async function removeDepartment() {
+    console.log('\n');
+    console.log('REMOVING DEPARTMENT');
+    console.log('\n');
+
+    // Provide output from department table for the user to select a department to remove
+    db.query('SELECT * FROM department WHERE deleted_time is NULL;', async (err, res) => {
+        if (err) throw err;
+        let choices = res.map(res => `${res.id} ${res.name}`);
+        choices.push('none');
+        let { department } = await inquirer.prompt([
+            {
+                name: 'department',
+                type: 'list',
+                choices: choices,
+                message: 'Choose the department: '
+            }
+        ]);
+        
+        let departmentId;
+        for (const row of res) {
+            departmentId = row.id;
+                continue;
+        }
+        
+        const query = `UPDATE department SET deleted_time = CURRENT_TIMESTAMP WHERE id =${departmentId}`;
+
+        // Remove selected department
+        db.query(query, (err, res) => {
+            if (err) throw err;
+            console.log('\n');
+            console.log('DEPARTMENT REMOVED');
+            console.log('\n');
+            init();
+        });
+    });
+};
+
+// Menu option 13) View All Employees By Department
 function allEmployeesByDept() {
     const query = `SELECT id, first_name, last_name, manager_id, role_id, department_id FROM employee WHERE deleted_time is NULL ORDER BY department_id;`;
     db.query(query, (err, res) => {
         if (err) throw err;
         console.log('\n');
-        console.log('');
+        console.log('VIEW ALL EMPLOYEES BY DEPARTMENT');
+        console.log('\n');
         console.table(res);
         init();
     });
 };
 
-// Menu option 12) View All Employees by Manager
+// Menu option 14) View All Employees by Manager
 function allEmployeesByManager() {
     const query = `SELECT id, first_name, last_name, manager_id, role_id, department_id FROM employee WHERE deleted_time is NULL ORDER BY manager_id;`;
     db.query(query, (err, res) => {
         if (err) throw err;
         console.log('\n');
-        console.log('');
+        console.log('VIEW ALL EMPLOYEES BY MANAGER');
+        console.log('\n');
         console.table(res);
         init();
     });
