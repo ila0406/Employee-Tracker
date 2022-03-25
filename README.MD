@@ -20,19 +20,19 @@
 Developers frequently have to create interfaces that allow non-developers to easily view and interact with information stored in databases. These interfaces are called CMS. This is a command-line application to manage a company's employee database, using Node.js, Inquirer, and MySQL
 
 ## Main Menu Commands
-01) View All Employees',
-02) Add Employee',
-03) Remove Employee',
-04) Update Employee Role',
-05) Update Employee Manager',
-06) Update Employee Department',
-07) View All Roles',
-08) Add Role',
-09) View all Departments',
-10) Add Department',
-11) View All Employees By Department',
-12) View All Employees by Manager',
-13) Quit'
+01) View All Employees
+02) Add Employee
+03) Remove Employee
+04) Update Employee Role
+05) Update Employee Manager
+06) Update Employee Department
+07) View All Roles
+08) Add Role
+09) View all Departments
+10) Add Department
+11) View All Employees By Department
+12) View All Employees by Manager
+13) Quit
 
 
 ## <a id='technolgies-used' href='#readme-badges'><img id='usage' src='https://i.imgur.com/ykBU02c.png' style='height: 40px'></a>

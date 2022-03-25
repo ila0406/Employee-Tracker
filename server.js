@@ -87,13 +87,12 @@ async function init ()  {
             break;
     }
 
-    await init();
+    // await init();
 };
 
 // Menu option 01) View All Employees
 function allEmployees() {
-    const query = `SELECT CONCAT(e.first_name, " ", e.last_name) AS Name, role.title AS Title, role.salary AS Salary, CONCAT(m.first_name, " ", m.last_name) AS Manager, department.name AS Department FROM employee e INNER JOIN role ON role_id=role.id INNER JOIN employee m ON e.manager_id=m.id INNER JOIN department ON role.department_id=department.id;
-    `;
+    const query = `SELECT e.id, CONCAT(e.first_name, " ", e.last_name) AS Name, role.title AS Title, role.salary AS Salary, CONCAT(m.first_name, " ", m.last_name) AS Manager, department.name AS Department FROM employee e INNER JOIN role ON role_id=role.id INNER JOIN employee m ON e.manager_id=m.id INNER JOIN department ON role.department_id=department.id and e.deleted_time is NULL order by e.id;`;
     db.query(query, (err, res) => {
         if (err) throw err;
         console.log('\n');
@@ -105,9 +104,7 @@ function allEmployees() {
 
 // Menu option 02) Add Employee
 async function addEmployee() {
-    // console.log('\n');
-    // console.log('Bugs found');
-    // init();
+    
     console.log('ADDING EMPLOYEE');
 
     const addname = await inquirer.prompt(namePrompt());
@@ -191,17 +188,43 @@ function namePrompt() {
     ]);
 }
 
-// Menu option 03) Remove Employee
-function removeEmployee() {
-//     const query = ``;
-//     db.query(query, (err, res) => {
-//         if (err) throw err;
-        console.log('\n');
-        console.log('Removing a Employee will be in v2');
-//         console.table(res);
-//         init();
-//     });
+// // Menu option 03) Remove Employee
+async function removeEmployee() {
+    console.log('REMOVING EMPLOYEE');
+
+    db.query('SELECT * FROM employee WHERE deleted_time is NULL;', async (err, res) => {
+        if (err) throw err;
+        let choices = res.map(res => `${res.id} ${res.first_name} ${res.last_name}`);
+        choices.push('none');
+        let { employee } = await inquirer.prompt([
+            {
+                name: 'employee',
+                type: 'list',
+                choices: choices,
+                message: 'Choose the employee: '
+            }
+        ]);
+        
+        let employeeId;
+        for (const row of res) {
+                employeeId = row.id;
+                continue;
+        }
+
+        console.log(employeeId);
+        
+        const query = `UPDATE employee SET deleted_time = CURRENT_TIMESTAMP WHERE id =${employeeId}`;
+        console.log(query);
+
+        db.query(query, (err, res) => {
+            if (err) throw err;
+            console.log('\n');
+            console.log('DELETE THE EMPLOYEES');
+            init();
+        });
+    });
 };
+    
 
 // Menu option 04) Update Employee Role
 function updateEmployeeRole() {
