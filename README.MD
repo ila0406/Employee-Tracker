@@ -3,7 +3,7 @@
 ## GitHub Repository & Walkthrough Video Application
 * https://github.com/ila0406/Employee-Tracker
 * [Walkthrough Video](https://drive.google.com/drive/u/0/folders/1UI2KWncr4erHyD7Q0AjsXeY8JMkQF5vH)
-* [Walkthrough Viedo - Loom](https://www.loom.com/share/d2b9e7dbe906470183ccf43ab7c76700)
+* [Walkthrough Viedo - Loom](https://www.loom.com/share/22fbf106ad274bd8930dba5eff2fbc0a)
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
@@ -94,29 +94,32 @@ Once Installed
 <img src="./assets/images/7.png" width="300">
 
 08) Add Role
+
+<img src="./assets/images/8.png" width="300">
+
 09) Remove Role
 
-<img src="./assets/images/TBD_8-9.png" width="300">
+<img src="./assets/images/9.png" width="300">
 
 10) View all Departments
 
-<img src="./assets/images/10.png" width="500">
+<img src="./assets/images/10.png" width="300">
 
 11) Add Department
 
-<img src="./assets/images/11.png" width="500">
+<img src="./assets/images/11.png" width="300">
 
 12) Remove Department
 
-<img src="./assets/images/12.png" width="500">
+<img src="./assets/images/12.png" width="300">
 
 13) View All Employees By Department
 
-<img src="./assets/images/13.png" width="500">
+<img src="./assets/images/13.png" width="300">
 
 14) View All Employees by Manager
 
-<img src="./assets/images/14.png" width="500">
+<img src="./assets/images/14.png" width="300">
 
 
 ## <a id='questions' href='#readme-badges'><img id='usage' src='https://imgur.com/Z3i069z.png' style='height: 40px'></a>

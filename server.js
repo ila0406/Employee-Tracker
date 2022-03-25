@@ -370,18 +370,77 @@ function allRoles() {
 };
 
 // Menu option 08) Add Role
-function addRole() {
-//     const query = ``;
-//     db.query(query, (err, res) => {
-//         if (err) throw err;
-        console.log('\n');
-        console.log('ADDING ROLE');
-        console.log('ROLE ADDED');
-        console.log('\n');
-//         console.table(res);
-        init();
-//     });
+async function addRole() {
+    console.log('\n');
+    console.log('ADDING ROLE');
+    console.log('\n');
+    // Prompt user for role title & salary for
+    const addTitle = await inquirer.prompt(rolePrompt());
+    const addSalary = await inquirer.prompt(salaryPrompt());
+
+    // Provide output from role table for the user to select a role for new employee 
+    db.query('SELECT * FROM department;', async (err, res) => {
+        if (err) throw err;
+        const { department } = await inquirer.prompt([
+            {
+                name: 'department',
+                type: 'list',
+                choices: () => res.map(res => res.name),
+                message: 'What department does the role belong to?: '
+            }
+        ]);
+
+        // Set new role's department based on response from user
+        let deptId;
+        for (const row of res) {
+            if (row.name === department) {
+                deptId = row.id;
+                continue;
+            }
+        }
+        console.log(deptId);
+        console.log(addTitle.title);
+        console.log(addSalary.salary);
+
+        // Insert all input for new role into role table
+        db.query(
+            'INSERT INTO role SET ?',
+            {
+                title: addTitle.title,
+                salary: addSalary.salary,
+                department_id: deptId
+            },
+            (err, res) => {
+                if (err) throw err;
+                console.log('\n');
+                console.log('EMPLOYEE ADDED');
+                console.log('\n');
+                init();
+            }
+        );
+    });
 };
+
+// Function to prompt for role title
+function rolePrompt() {
+    return ([
+        {
+            name: "title",
+            type: "input",
+            message: "Enter the title for the new role: "
+        }
+    ]);
+}
+// Function to prompt for role salary
+function salaryPrompt() {
+    return ([
+        {
+            name: "salary",
+            type: "input",
+            message: "Enter the salary for the new role:"
+        }
+    ]);
+}
 
 // Menu option 09) Remove Role
 async function removeRole() {
@@ -390,7 +449,7 @@ async function removeRole() {
     console.log('\n');
 
     // Provide output from employee table for the user to select a employee to remove
-    db.query('SELECT * FROM ROLE WHERE deleted_time is NULL;', async (err, res) => {
+    db.query('SELECT * FROM role WHERE deleted_time is NULL;', async (err, res) => {
         if (err) throw err;
         let choices = res.map(res => `${res.id} ${res.title}`);
         choices.push('none');
@@ -402,14 +461,14 @@ async function removeRole() {
                 message: 'Choose the role: '
             }
         ]);
-        
+
         let roleId;
         for (const row of res) {
             roleId = row.id;
             continue;
         }
-        
-        const query = `UPDATE ROLE SET deleted_time = CURRENT_TIMESTAMP WHERE id =${roleId}`;
+
+        const query = `UPDATE role SET deleted_time = CURRENT_TIMESTAMP WHERE id =${roleId}`;
 
         // Remove selected employee
         db.query(query, (err, res) => {
@@ -499,7 +558,7 @@ async function removeDepartment() {
             departmentId = row.id;
                 continue;
         }
-        
+
         const query = `UPDATE department SET deleted_time = CURRENT_TIMESTAMP WHERE id =${departmentId}`;
 
         // Remove selected department
