@@ -358,7 +358,7 @@ async function updateEmployeeDept() {
 
 // Menu option 07) View All Roles
 function allRoles() {
-    const query = `SELECT r.id, r.title as role_title, r.salary, d.name as department_name FROM role r, department d WHERE d.id = r.department_id and d.deleted_time is NULL;`;
+    const query = `SELECT r.id, r.title as role_title, r.salary, d.name as department_name FROM role r, department d WHERE d.id = r.department_id and r.deleted_time is NULL;`;
     db.query(query, (err, res) => {
         if (err) throw err;
         console.log('\n');
@@ -384,17 +384,42 @@ function addRole() {
 };
 
 // Menu option 09) Remove Role
-function removeRole() {
-//     const query = ``;
-//     db.query(query, (err, res) => {
-//         if (err) throw err;
-        console.log('\n');
-        console.log('REMOVING ROLE');
-        console.log('ROLE REMOVED');
-        console.log('\n');
-        //         console.table(res);
-        init();
-        //     });
+async function removeRole() {
+    console.log('\n');
+    console.log('REMOVING ROLE');
+    console.log('\n');
+
+    // Provide output from employee table for the user to select a employee to remove
+    db.query('SELECT * FROM ROLE WHERE deleted_time is NULL;', async (err, res) => {
+        if (err) throw err;
+        let choices = res.map(res => `${res.id} ${res.title}`);
+        choices.push('none');
+        let { role } = await inquirer.prompt([
+            {
+                name: 'role',
+                type: 'list',
+                choices: choices,
+                message: 'Choose the role: '
+            }
+        ]);
+        
+        let roleId;
+        for (const row of res) {
+            roleId = row.id;
+            continue;
+        }
+        
+        const query = `UPDATE ROLE SET deleted_time = CURRENT_TIMESTAMP WHERE id =${roleId}`;
+
+        // Remove selected employee
+        db.query(query, (err, res) => {
+            if (err) throw err;
+            console.log('\n');
+            console.log('ROLE REMOVED');
+            console.log('\n');
+            init();
+        });
+    });
 };
 
 // Menu option 10) View all Departments
@@ -420,7 +445,6 @@ async function addDepartment() {
     const deptName = adddept.name;
         
     const query = `INSERT INTO department (name) VALUES (${deptName})`;
-    console.log(query);
 
     // Insert all input for new department into department table
     db.query(

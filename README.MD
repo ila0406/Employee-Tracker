@@ -91,7 +91,7 @@ Once Installed
 
 07) View all Roles
 
-<img src="./assets/images/7.png" width="500">
+<img src="./assets/images/7.png" width="300">
 
 08) Add Role
 09) Remove Role
