@@ -66,7 +66,7 @@ async function init ()  {
         case '08) Add Role':
             await addRole();
             break;
-        case '09) Add Role':
+        case '09) Remove Role':
             await removeRole();
             break;
         case '10) View all Departments':
@@ -375,24 +375,27 @@ function addRole() {
 //     db.query(query, (err, res) => {
 //         if (err) throw err;
         console.log('\n');
-        console.log('Adding a Role will be in v2');
+        console.log('ADDING ROLE');
+        console.log('ROLE ADDED');
         console.log('\n');
 //         console.table(res);
-//         init();
+        init();
 //     });
 };
 
 // Menu option 09) Remove Role
 function removeRole() {
-    //     const query = ``;
-    //     db.query(query, (err, res) => {
-    //         if (err) throw err;
-            console.log('\n');
-            console.log('Adding a Role will be in v2');
-    //         console.table(res);
-    //         init();
-    //     });
-    };
+//     const query = ``;
+//     db.query(query, (err, res) => {
+//         if (err) throw err;
+        console.log('\n');
+        console.log('REMOVING ROLE');
+        console.log('ROLE REMOVED');
+        console.log('\n');
+        //         console.table(res);
+        init();
+        //     });
+};
 
 // Menu option 10) View all Departments
 function allDepartments() {
