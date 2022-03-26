@@ -16,10 +16,9 @@ CREATE TABLE department   (
 );
 
 CREATE TABLE role   (
-    -- id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     id INT NOT NULL AUTO_INCREMENT,
     title VARCHAR(30) NOT NULL,
-    salary DECIMAL(10,2) NOT NULL,
+    salary DECIMAL(10) NOT NULL,
     department_id INT,
     created_time DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_time DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -30,8 +29,7 @@ CREATE TABLE role   (
 );
 
 CREATE TABLE employee   (
-    -- id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    id INT NOT NULL AUTO_INCREMENT,
+    id INT NOT NULL AUTO_INCREMENT, 
     first_name VARCHAR(30),
     last_name VARCHAR(30),
     manager_id INT,
@@ -51,30 +49,3 @@ CREATE TABLE employee   (
     REFERENCES employee(id)
     ON DELETE SET NULL
 );
-
--- TABLES
--- departments
-    -- department.ID
-    -- department.name
-    -- department.created_time
-    -- department.updated_time
-    -- department.deleted_time
--- roles
-    -- roles.ID
-    -- roles.job_title
-    -- roles.department_id
-    -- roles.salary
-    -- roles.created_time
-    -- roles.updated_time
-    -- roles.deleted_time
--- employees
-    -- employees.ID
-    -- employees.first_name
-    -- employees.last_name
-    -- employees.manager_id
-    -- employees.role_id
-    -- employees.department_id
-    -- employees.created_time
-    -- employees.updated_time
-    -- employees.deleted_time
--- company

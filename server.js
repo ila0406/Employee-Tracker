@@ -219,12 +219,8 @@ async function removeEmployee() {
                 message: 'Choose the employee: '
             }
         ]);
-        
-        let employeeId;
-        for (const row of res) {
-                employeeId = row.id;
-                continue;
-        }
+
+        const employeeId = employee.split(' ')[0];
         
         const query = `UPDATE employee SET deleted_time = CURRENT_TIMESTAMP WHERE id =${employeeId}`;
 
@@ -258,23 +254,46 @@ async function updateEmployeeRole() {
                 message: 'Choose the employee: '
             }
         ]);
+        console.log('Employee to update ' + employee);
+        const employeeId = employee.split(' ')[0];
         
-        // let employeeId;
-        // for (const row of res) {
-        //         employeeId = row.id;
-        //         continue;
-        // }
-        
-        // const query = `UPDATE employee SET deleted_time = CURRENT_TIMESTAMP WHERE id =${employeeId}`;
+        console.log('Employee ID ' + employeeId);
+        console.log('Employee to update ' + employeeId);
 
-        // Remove selected employee
-        // db.query(query, (err, res) => {
-        //     if (err) throw err;
-            console.log('\n');
-            console.log('EMPLOYEE ROLE UPDATED');
-            console.log('\n');
-            init();
-        // });
+        
+         // Provide output from employee table for the user to select a employee to remove
+        db.query('SELECT * FROM role WHERE deleted_time is NULL;', async (err, res) => {
+            if (err) throw err;
+            let choices = res.map(res => `${res.id} ${res.title}`);
+            choices.push('none');
+            let { role } = await inquirer.prompt([
+                {
+                    name: 'role',
+                    type: 'list',
+                    choices: choices,
+                    message: 'Choose the new role: '
+                }
+            ]);
+            
+            let roleId;
+            console.log(res.id);
+            console.log(res.title);
+            console.log(employeeId);
+            for (const row of res) {
+                roleId = row.id;
+                continue;
+            }
+            // const query = `UPDATE employee SET deleted_time = CURRENT_TIMESTAMP WHERE id =${employeeId}`;
+
+            // Remove selected employee
+            // db.query(query, (err, res) => {
+            //     if (err) throw err;
+                console.log('\n');
+                console.log('EMPLOYEE ROLE UPDATED');
+                console.log('\n');
+                init();
+            // });
+        });
     });
 };
 
@@ -462,12 +481,8 @@ async function removeRole() {
             }
         ]);
 
-        let roleId;
-        for (const row of res) {
-            roleId = row.id;
-            continue;
-        }
-
+        const roleId = role.split(' ')[0];
+        
         const query = `UPDATE role SET deleted_time = CURRENT_TIMESTAMP WHERE id =${roleId}`;
 
         // Remove selected employee
@@ -553,11 +568,7 @@ async function removeDepartment() {
             }
         ]);
         
-        let departmentId;
-        for (const row of res) {
-            departmentId = row.id;
-                continue;
-        }
+        const departmentId = department.split(' ')[0];
 
         const query = `UPDATE department SET deleted_time = CURRENT_TIMESTAMP WHERE id =${departmentId}`;
 
