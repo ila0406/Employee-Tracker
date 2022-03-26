@@ -88,9 +88,12 @@ Once Installed
 <img src="./assets/images/4.png" width="500">
 
 05) Update Employee Manager
+
+<img src="./assets/images/5.png" width="500">
+
 06) Update Employee Department
 
-<img src="./assets/images/TBD_4-5-6.png" width="300">
+<img src="./assets/images/6.png" width="300">
 
 07) View all Roles
 
