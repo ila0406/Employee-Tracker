@@ -605,27 +605,73 @@ async function removeDepartment() {
 
 // Menu option 13) View All Employees By Department
 function allEmployeesByDept() {
-    const query = `SELECT id, first_name, last_name, manager_id, role_id, department_id FROM employee WHERE deleted_time is NULL ORDER BY department_id;`;
-    db.query(query, (err, res) => {
+    console.log('\n');
+    console.log('VIEW ALL EMPLOYEES BY DEPARTMENT');
+    console.log('\n');
+
+    // Provide output from employee table for only subset of employees
+    db.query('SELECT * FROM department WHERE deleted_time is NULL;', async (err, res) => {
         if (err) throw err;
-        console.log('\n');
-        console.log('VIEW ALL EMPLOYEES BY DEPARTMENT');
-        console.log('\n');
-        console.table(res);
-        init();
+        let choices = res.map(res => `${res.id}  ${res.name}`);
+        choices.push('none');
+        let { department } = await inquirer.prompt([
+            {
+                name: 'department',
+                type: 'list',
+                choices: choices,
+                message: 'Choose the new manager: '
+            }
+        ]);
+
+        // Use department_id from inquirer.prompt to use in select query
+        const departmentId = department.split(' ')[0];
+        
+        const query = `SELECT e.id, CONCAT(e.first_name, " ", e.last_name) AS Name, role.title AS Title, role.salary AS Salary, CONCAT(m.first_name, " ", m.last_name) AS Manager, department.name AS Department FROM employee e INNER JOIN role ON role_id=role.id INNER JOIN employee m ON e.manager_id=m.id INNER JOIN department ON role.department_id=department.id and e.deleted_time is NULL WHERE e.department_id = ${departmentId} order by e.id;`;
+        // Output all Employees for selected Manager
+        db.query(query, (err, res) => {
+            if (err) throw err;
+            console.log('\n');
+            console.log('VIEW ALL EMPLOYEES BY DEPARTMENT');
+            console.log('\n');
+            console.table(res);
+            init();
+        });
     });
 };
 
 // Menu option 14) View All Employees by Manager
 function allEmployeesByManager() {
-    const query = `SELECT id, first_name, last_name, manager_id, role_id, department_id FROM employee WHERE deleted_time is NULL ORDER BY manager_id;`;
-    db.query(query, (err, res) => {
+    console.log('\n');
+    console.log('VIEW ALL EMPLOYEES BY MANAGER');
+    console.log('\n');
+
+    // Provide output from employee table for only subset of employees
+    db.query('SELECT * FROM employee WHERE deleted_time is NULL;', async (err, res) => {
         if (err) throw err;
-        console.log('\n');
-        console.log('VIEW ALL EMPLOYEES BY MANAGER');
-        console.log('\n');
-        console.table(res);
-        init();
+        let choices = res.map(res => `${res.id}  ${res.first_name} ${res.last_name}`);
+        choices.push('none');
+        let { employee } = await inquirer.prompt([
+            {
+                name: 'employee',
+                type: 'list',
+                choices: choices,
+                message: 'Choose the new manager: '
+            }
+        ]);
+
+        // Use manager_id from inquirer.prompt to use in select query
+        const managerId = employee.split(' ')[0];
+        
+        const query = `SELECT e.id, CONCAT(e.first_name, " ", e.last_name) AS Name, role.title AS Title, role.salary AS Salary, CONCAT(m.first_name, " ", m.last_name) AS Manager, department.name AS Department FROM employee e INNER JOIN role ON role_id=role.id INNER JOIN employee m ON e.manager_id=m.id INNER JOIN department ON role.department_id=department.id and e.deleted_time is NULL WHERE e.manager_id = ${managerId} order by e.id;`;
+        // Output all Employees for selected Manager
+        db.query(query, (err, res) => {
+            if (err) throw err;
+            console.log('\n');
+            console.log('VIEW ALL EMPLOYEES BY MANAGER');
+            console.log('\n');
+            console.table(res);
+            init();
+        });
     });
 };
 

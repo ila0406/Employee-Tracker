@@ -3,7 +3,7 @@
 ## GitHub Repository & Walkthrough Video Application
 * https://github.com/ila0406/Employee-Tracker
 * [Walkthrough Video](https://drive.google.com/drive/u/0/folders/1UI2KWncr4erHyD7Q0AjsXeY8JMkQF5vH)
-* [Walkthrough Viedo - Loom](https://www.loom.com/share/22fbf106ad274bd8930dba5eff2fbc0a)
+* [Walkthrough Viedo - Loom](https://www.loom.com/share/af21a2871f4040b39c209b7a33f29db1)
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
