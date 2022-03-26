@@ -254,14 +254,11 @@ async function updateEmployeeRole() {
                 message: 'Choose the employee: '
             }
         ]);
-        console.log('Employee to update ' + employee);
+        
+        // Use role_id from inquirer.prompt to create UPDATE query
         const employeeId = employee.split(' ')[0];
         
-        console.log('Employee ID ' + employeeId);
-        console.log('Employee to update ' + employeeId);
-
-        
-         // Provide output from employee table for the user to select a employee to remove
+        // Provide output from employee table for the user to select a employee to remove
         db.query('SELECT * FROM role WHERE deleted_time is NULL;', async (err, res) => {
             if (err) throw err;
             let choices = res.map(res => `${res.id} ${res.title}`);
@@ -274,25 +271,19 @@ async function updateEmployeeRole() {
                     message: 'Choose the new role: '
                 }
             ]);
-            
-            let roleId;
-            console.log(res.id);
-            console.log(res.title);
-            console.log(employeeId);
-            for (const row of res) {
-                roleId = row.id;
-                continue;
-            }
-            // const query = `UPDATE employee SET deleted_time = CURRENT_TIMESTAMP WHERE id =${employeeId}`;
+
+            // Use role_id from inquirer.prompt to create UPDATE query
+            const roleId = role.split(' ')[0];
+            const query = `UPDATE employee SET role_id = ${roleId} WHERE id =${employeeId}`;
 
             // Remove selected employee
-            // db.query(query, (err, res) => {
-            //     if (err) throw err;
+            db.query(query, (err, res) => {
+                if (err) throw err;
                 console.log('\n');
                 console.log('EMPLOYEE ROLE UPDATED');
                 console.log('\n');
                 init();
-            // });
+            });
         });
     });
 };
