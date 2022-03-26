@@ -241,7 +241,7 @@ async function updateEmployeeRole() {
     console.log('UPDATE EMPLOYEE ROLE');
     console.log('\n');
 
-    // Provide output from employee table for the user to select a employee to remove
+    // Provide output from employee table for the user to select a employee to update
     db.query('SELECT * FROM employee WHERE deleted_time is NULL;', async (err, res) => {
         if (err) throw err;
         let choices = res.map(res => `${res.id} ${res.first_name} ${res.last_name}`);
@@ -255,10 +255,10 @@ async function updateEmployeeRole() {
             }
         ]);
         
-        // Use role_id from inquirer.prompt to create UPDATE query
+        // Use employee_id from inquirer.prompt to use in UPDATE query
         const employeeId = employee.split(' ')[0];
         
-        // Provide output from employee table for the user to select a employee to remove
+        // Provide output from role table for the user to select a new role
         db.query('SELECT * FROM role WHERE deleted_time is NULL;', async (err, res) => {
             if (err) throw err;
             let choices = res.map(res => `${res.id} ${res.title}`);
@@ -272,11 +272,11 @@ async function updateEmployeeRole() {
                 }
             ]);
 
-            // Use role_id from inquirer.prompt to create UPDATE query
+            // Use role_id from inquirer.prompt to use in UPDATE query
             const roleId = role.split(' ')[0];
             const query = `UPDATE employee SET role_id = ${roleId} WHERE id =${employeeId}`;
 
-            // Update selected employee
+            // Update selected employee's role
             db.query(query, (err, res) => {
                 if (err) throw err;
                 console.log('\n');
@@ -294,7 +294,7 @@ async function updateEmployeeManager() {
     console.log('UPDATE EMPLOYEE MANAGER');
     console.log('\n');
 
-    // Provide output from employee table for the user to select a employee to remove
+    // Provide output from employee table for the user to select a employee to update
     db.query('SELECT * FROM employee WHERE deleted_time is NULL;', async (err, res) => {
         if (err) throw err;
         let choices = res.map(res => `${res.id} ${res.first_name} ${res.last_name}`);
@@ -308,10 +308,10 @@ async function updateEmployeeManager() {
             }
         ]);
         
-       // Use role_id from inquirer.prompt to create UPDATE query
+       // Use employee_id from inquirer.prompt to use in UPDATE query
        const employeeId = employee.split(' ')[0];
         
-        // Provide output from employee table for the user to select a employee to remove
+        // Provide output from employee table for the user to select a new manager
         db.query('SELECT * FROM employee WHERE deleted_time is NULL;', async (err, res) => {
             if (err) throw err;
             let choices = res.map(res => `${res.id}  ${res.first_name} ${res.last_name}`);
@@ -325,12 +325,12 @@ async function updateEmployeeManager() {
                 }
             ]);
 
-            // Use role_id from inquirer.prompt to create UPDATE query
+            // Use manager_id from inquirer.prompt to use in UPDATE query
             const managerId = employee.split(' ')[0];
             
             const query = `UPDATE employee SET manager_id = ${managerId} WHERE id =${employeeId}`;
 
-            // Update selected employee
+            // Update selected employee's manager
             db.query(query, (err, res) => {
                 if (err) throw err;
                 console.log('\n');
@@ -348,7 +348,7 @@ async function updateEmployeeDept() {
     console.log('UPDATE EMPLOYEE DEPARTMENT');
     console.log('\n');
 
-    // Provide output from employee table for the user to select a employee to remove
+    // Provide output from employee table for the user to select a employee to update
     db.query('SELECT * FROM employee WHERE deleted_time is NULL;', async (err, res) => {
         if (err) throw err;
         let choices = res.map(res => `${res.id} ${res.first_name} ${res.last_name}`);
@@ -362,10 +362,10 @@ async function updateEmployeeDept() {
             }
         ]);
         
-       // Use role_id from inquirer.prompt to create UPDATE query
+       // Use employee_id from inquirer.prompt to use in UPDATE query
        const employeeId = employee.split(' ')[0];
         
-        // Provide output from employee table for the user to select a employee to remove
+        // Provide output from department table for the user to select a new department
         db.query('SELECT * FROM department WHERE deleted_time is NULL;', async (err, res) => {
             if (err) throw err;
             let choices = res.map(res => `${res.id}  ${res.name}`);
@@ -379,12 +379,11 @@ async function updateEmployeeDept() {
                 }
             ]);
 
-            // Use role_id from inquirer.prompt to create UPDATE query
+            // Use employee_id from inquirer.prompt to use in UPDATE query
             const departmentId = department.split(' ')[0];
-            
             const query = `UPDATE employee SET department_id = ${departmentId} WHERE id =${employeeId}`;
 
-            // Update selected employee
+            // Update selected employee's department
             db.query(query, (err, res) => {
                 if (err) throw err;
                 console.log('\n');
