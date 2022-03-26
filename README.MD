@@ -84,6 +84,9 @@ Once Installed
 <img src="./assets/images/3.png" width="500">
 
 04) Update Employee Role
+
+<img src="./assets/images/4.png" width="500">
+
 05) Update Employee Manager
 06) Update Employee Department
 
