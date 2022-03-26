@@ -276,7 +276,7 @@ async function updateEmployeeRole() {
             const roleId = role.split(' ')[0];
             const query = `UPDATE employee SET role_id = ${roleId} WHERE id =${employeeId}`;
 
-            // Remove selected employee
+            // Update selected employee
             db.query(query, (err, res) => {
                 if (err) throw err;
                 console.log('\n');
@@ -330,7 +330,7 @@ async function updateEmployeeManager() {
             
             const query = `UPDATE employee SET manager_id = ${managerId} WHERE id =${employeeId}`;
 
-            // Remove selected employee
+            // Update selected employee
             db.query(query, (err, res) => {
                 if (err) throw err;
                 console.log('\n');
@@ -362,22 +362,37 @@ async function updateEmployeeDept() {
             }
         ]);
         
-        // let employeeId;
-        // for (const row of res) {
-        //         employeeId = row.id;
-        //         continue;
-        // }
+       // Use role_id from inquirer.prompt to create UPDATE query
+       const employeeId = employee.split(' ')[0];
         
-        // const query = `UPDATE employee SET deleted_time = CURRENT_TIMESTAMP WHERE id =${employeeId}`;
+        // Provide output from employee table for the user to select a employee to remove
+        db.query('SELECT * FROM department WHERE deleted_time is NULL;', async (err, res) => {
+            if (err) throw err;
+            let choices = res.map(res => `${res.id}  ${res.name}`);
+            choices.push('none');
+            let { department } = await inquirer.prompt([
+                {
+                    name: 'department',
+                    type: 'list',
+                    choices: choices,
+                    message: 'Choose the new manager: '
+                }
+            ]);
 
-        // Remove selected employee
-        // db.query(query, (err, res) => {
-        //     if (err) throw err;
-            console.log('\n');
-            console.log('EMPLOYEE DEPARTMENT UPDATED');
-            console.log('\n');
-            init();
-        // });
+            // Use role_id from inquirer.prompt to create UPDATE query
+            const departmentId = department.split(' ')[0];
+            
+            const query = `UPDATE employee SET department_id = ${departmentId} WHERE id =${employeeId}`;
+
+            // Update selected employee
+            db.query(query, (err, res) => {
+                if (err) throw err;
+                console.log('\n');
+                console.log('EMPLOYEE DEPARTMENT UPDATED');
+                console.log('\n');
+                init();
+            });
+        });
     });
 };
 
